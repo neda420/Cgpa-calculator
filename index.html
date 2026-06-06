@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A modern, premium CGPA Calculator. Calculate your Cumulative Grade Point Average easily with multi-semester support, grade charts, and GPA prediction.">
+    <meta name="keywords" content="CGPA, Calculator, GPA, Grade Point Average, University, College, Academic Performance">
+    <meta name="author" content="Nadimul">
+    <title>CGPA Calculator — Calculate Your Grade Point Average</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-effects" aria-hidden="true">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+        <div class="orb orb-4"></div>
+        <canvas id="particles-canvas"></canvas>
+    </div>
+
+    <main class="container">
+        <!-- Header -->
+        <header class="header" id="app-header">
+            <div class="header-top-row">
+                <div class="header-brand">
+                    <div class="header-icon">🎓</div>
+                    <div>
+                        <h1 class="header-title">CGPA Calculator</h1>
+                        <p class="header-subtitle">Track your academic performance with precision</p>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button class="icon-btn" id="btn-theme-toggle" title="Toggle theme (Ctrl+T)">
+                        <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                            <circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="2"/>
+                            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        <svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                            <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <button class="icon-btn" id="btn-export" title="Export results (Ctrl+E)">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <!-- GPA Scale Selector -->
+            <div class="scale-selector" id="scale-selector">
+                <span class="scale-label">GPA Scale</span>
+                <div class="scale-options">
+                    <button class="scale-btn active" data-scale="4" id="scale-4">4.0</button>
+                    <button class="scale-btn" data-scale="5" id="scale-5">5.0</button>
+                    <button class="scale-btn" data-scale="10" id="scale-10">10.0</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Semester Tabs -->
+        <div class="semester-tabs-wrapper" id="semester-tabs-wrapper">
+            <div class="semester-tabs" id="semester-tabs">
+                <button class="tab active" data-semester="1" id="tab-sem-1">
+                    <span class="tab-text">Semester 1</span>
+                    <span class="tab-gpa" id="tab-gpa-1">—</span>
+                </button>
+                <button class="tab-add" id="btn-add-semester" title="Add Semester (Ctrl+N)">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Input Card -->
+        <section class="card input-card" id="input-card">
+            <div class="card-header-row">
+                <h2 class="card-title">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                    </svg>
+                    Add Course
+                </h2>
+                <span class="shortcut-hint">Enter ↵</span>
+            </div>
+            <form class="input-form" id="course-form">
+                <div class="form-group">
+                    <label for="course-name" class="form-label">Course Name</label>
+                    <input 
+                        type="text" 
+                        id="course-name" 
+                        class="form-input" 
+                        placeholder="e.g. Data Structures & Algorithms"
+                        autocomplete="off"
+                        required
+                    >
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="credit-hours" class="form-label">Credits</label>
+                        <input 
+                            type="number" 
+                            id="credit-hours" 
+                            class="form-input" 
+                            placeholder="3"
+                            min="0.5"
+                            max="10"
+                            step="0.5"
+                            required
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label for="grade-select" class="form-label">Grade</label>
+                        <select id="grade-select" class="form-input form-select" required>
+                            <option value="" disabled selected>Select grade</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary" id="btn-add-course">
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                        <path d="M9 3v12M3 9h12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                    </svg>
+                    Add Course
+                </button>
+            </form>
+        </section>
+
+        <!-- Courses Table -->
+        <section class="card table-card" id="table-card">
+            <div class="table-header">
+                <h2 class="card-title">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                        <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    Courses
+                    <span class="course-count-badge" id="course-count-badge">0</span>
+                </h2>
+                <div class="table-actions">
+                    <button class="btn btn-ghost" id="btn-delete-semester" title="Delete this semester">
+                        <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                            <path d="M2 4h12M5.33 4V2.67a1.33 1.33 0 011.34-1.34h2.66a1.33 1.33 0 011.34 1.34V4m2 0v9.33a1.33 1.33 0 01-1.34 1.34H4.67a1.33 1.33 0 01-1.34-1.34V4h9.34z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Delete Sem
+                    </button>
+                    <button class="btn btn-ghost" id="btn-clear-all" title="Clear all courses">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                            <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        Clear All
+                    </button>
+                </div>
+            </div>
+
+            <div class="table-wrapper" id="table-wrapper">
+                <table class="courses-table" id="courses-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Course</th>
+                            <th>Credits</th>
+                            <th>Grade</th>
+                            <th>Points</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="courses-tbody">
+                    </tbody>
+                </table>
+                <div class="empty-state" id="empty-state">
+                    <div class="empty-icon">📚</div>
+                    <p>No courses added yet</p>
+                    <span>Add your first course above to get started</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results Card -->
+        <section class="card results-card" id="results-card">
+            <div class="results-grid">
+                <!-- GPA Ring -->
+                <div class="gpa-ring-container" id="gpa-ring-container">
+                    <svg class="gpa-ring" viewBox="0 0 200 200">
+                        <defs>
+                            <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="var(--accent-1)"/>
+                                <stop offset="50%" stop-color="var(--accent-2)"/>
+                                <stop offset="100%" stop-color="var(--accent-3)"/>
+                            </linearGradient>
+                        </defs>
+                        <circle class="ring-bg" cx="100" cy="100" r="85" />
+                        <circle class="ring-progress" id="ring-progress" cx="100" cy="100" r="85" />
+                    </svg>
+                    <div class="gpa-value">
+                        <span class="gpa-number" id="gpa-number">0.00</span>
+                        <span class="gpa-label">Semester GPA</span>
+                        <span class="gpa-letter" id="gpa-letter">—</span>
+                    </div>
+                </div>
+
+                <!-- Stats -->
+                <div class="stats-container">
+                    <div class="stat-item" id="stat-credits">
+                        <div class="stat-icon">📊</div>
+                        <div class="stat-content">
+                            <span class="stat-value" id="total-credits">0</span>
+                            <span class="stat-label">Total Credits</span>
+                        </div>
+                    </div>
+                    <div class="stat-item" id="stat-courses">
+                        <div class="stat-icon">📖</div>
+                        <div class="stat-content">
+                            <span class="stat-value" id="total-courses">0</span>
+                            <span class="stat-label">Courses</span>
+                        </div>
+                    </div>
+                    <div class="stat-item" id="stat-points">
+                        <div class="stat-icon">⭐</div>
+                        <div class="stat-content">
+                            <span class="stat-value" id="total-points">0.00</span>
+                            <span class="stat-label">Grade Points</span>
+                        </div>
+                    </div>
+                    <div class="stat-item" id="stat-highest">
+                        <div class="stat-icon">🏆</div>
+                        <div class="stat-content">
+                            <span class="stat-value" id="highest-gpa">—</span>
+                            <span class="stat-label">Best Semester</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CGPA Summary -->
+            <div class="cgpa-summary" id="cgpa-summary">
+                <div class="cgpa-divider"></div>
+                <div class="cgpa-row">
+                    <div class="cgpa-info">
+                        <span class="cgpa-title">Cumulative GPA</span>
+                        <span class="cgpa-detail" id="cgpa-detail">Across all semesters</span>
+                    </div>
+                    <div class="cgpa-badge" id="cgpa-badge">
+                        <span class="cgpa-value" id="cgpa-value">0.00</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Grade Distribution Chart -->
+        <section class="card chart-card" id="chart-card">
+            <h2 class="card-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <path d="M18 20V10M12 20V4M6 20v-6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                </svg>
+                Grade Distribution
+            </h2>
+            <div class="chart-container" id="grade-chart">
+                <div class="chart-empty">Add courses to see grade distribution</div>
+            </div>
+        </section>
+
+        <!-- Semester Comparison -->
+        <section class="card comparison-card" id="comparison-card">
+            <h2 class="card-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <path d="M3 3v18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M7 16l4-5 4 2 5-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Semester Comparison
+            </h2>
+            <div class="comparison-container" id="semester-comparison">
+                <div class="chart-empty">Add courses to multiple semesters to compare</div>
+            </div>
+        </section>
+
+        <!-- Target CGPA Predictor -->
+        <section class="card predictor-card" id="predictor-card">
+            <h2 class="card-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                    <circle cx="12" cy="12" r="6" stroke="currentColor" stroke-width="2"/>
+                    <circle cx="12" cy="12" r="2" fill="currentColor"/>
+                </svg>
+                Target CGPA Predictor
+            </h2>
+            <p class="predictor-desc">Find out what GPA you need next semester to achieve your target CGPA.</p>
+            <div class="predictor-form">
+                <div class="form-group">
+                    <label for="target-cgpa" class="form-label">Target CGPA</label>
+                    <input 
+                        type="number" 
+                        id="target-cgpa" 
+                        class="form-input" 
+                        placeholder="e.g. 3.50"
+                        min="0"
+                        max="4"
+                        step="0.01"
+                    >
+                </div>
+                <div class="form-group">
+                    <label for="target-credits" class="form-label">Next Semester Credits</label>
+                    <input 
+                        type="number" 
+                        id="target-credits" 
+                        class="form-input" 
+                        placeholder="e.g. 15"
+                        min="1"
+                        max="30"
+                        step="1"
+                    >
+                </div>
+                <button type="button" class="btn btn-secondary" id="btn-predict">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                        <path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    Calculate Required GPA
+                </button>
+            </div>
+            <div class="predictor-result hidden" id="predictor-result">
+                <div class="predictor-result-content" id="predictor-result-content"></div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer" id="app-footer">
+            <p>Made with ❤️ for students everywhere</p>
+            <div class="footer-shortcuts">
+                <span><kbd>Ctrl</kbd>+<kbd>N</kbd> New Semester</span>
+                <span><kbd>Ctrl</kbd>+<kbd>T</kbd> Theme</span>
+                <span><kbd>Ctrl</kbd>+<kbd>E</kbd> Export</span>
+            </div>
+        </footer>
+    </main>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Export Modal -->
+    <div class="modal-overlay hidden" id="export-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Export Results</h3>
+                <button class="icon-btn" id="btn-close-modal">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                        <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <button class="export-option" id="export-text">
+                    <span class="export-icon">📄</span>
+                    <div>
+                        <strong>Plain Text</strong>
+                        <span>Copy results as formatted text</span>
+                    </div>
+                </button>
+                <button class="export-option" id="export-csv">
+                    <span class="export-icon">📊</span>
+                    <div>
+                        <strong>CSV File</strong>
+                        <span>Download as spreadsheet-ready CSV</span>
+                    </div>
+                </button>
+                <button class="export-option" id="export-json">
+                    <span class="export-icon">💾</span>
+                    <div>
+                        <strong>JSON Data</strong>
+                        <span>Export complete data for backup</span>
+                    </div>
+                </button>
+                <button class="export-option" id="export-print">
+                    <span class="export-icon">🖨️</span>
+                    <div>
+                        <strong>Print</strong>
+                        <span>Print your CGPA report</span>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
