@@ -12,9 +12,6 @@ A modern, beautiful web application to calculate your Cumulative Grade Point Ave
 - **Fully Responsive** — Works beautifully on desktop, tablet, and mobile
 - **Dark Theme** — Premium glassmorphism design with animated background
 
-## 🚀 Live Demo
-
-[**Open Calculator →**](https://YOUR_USERNAME.github.io/Cgpa-calculator/)
 
 ## 🛠️ Grade Scale
 
