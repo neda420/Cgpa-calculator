@@ -1,6 +1,3 @@
-/* ============================================================
-   CGPA Calculator — Application Logic (Full Feature Set)
-
 
 (() => {
     'use strict';
