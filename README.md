@@ -12,7 +12,6 @@ A modern, beautiful web application to calculate your Cumulative Grade Point Ave
 - **Fully Responsive** — Works beautifully on desktop, tablet, and mobile
 - **Dark Theme** — Premium glassmorphism design with animated background
 
-
 ## 🛠️ Grade Scale
 
 | Grade | Points |
