@@ -1,6 +1,6 @@
 # 🎓 CGPA Calculator
 
-A modern, beautiful web application to calculate your Cumulative Grade Point Average (CGPA). Built with pure HTML, CSS, and JavaScript — no frameworks needed.
+A modern, beautiful web application to calculate your Cumulative Grade Point Average (CGPA). Built with pure HTML, CSS, and JavaScript.
 
 ## ✨ Features
 
