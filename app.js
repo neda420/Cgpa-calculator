@@ -1,7 +1,6 @@
 
 (() => {
     'use strict';
-
     // ---------- Grade Scales ----------
     const GRADE_SCALES = {
         4: {
