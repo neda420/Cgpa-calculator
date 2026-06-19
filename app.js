@@ -42,6 +42,7 @@
                 if (gpa >= 1.15) return 'D+';
                 if (gpa >= 0.50) return 'D';
                 return 'F';
+                
             },
         },
         5: {
