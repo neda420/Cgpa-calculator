@@ -1,6 +1,4 @@
-/* ============================================================
-   CGPA Calculator — Premium Dark/Light Theme Stylesheet
-   ============================================================ */
+
 
 /* ---------- Reset & Base ---------- */
 *, *::before, *::after {
@@ -8,7 +6,6 @@
     padding: 0;
     box-sizing: border-box;
 }
-
 /* ---------- CSS Custom Properties ---------- */
 :root {
     /* Accent Gradient (shared) */
@@ -64,7 +61,7 @@
     --shadow-glow: 0 0 60px rgba(129, 140, 248, 0.08);
     --shadow-btn: 0 4px 20px rgba(129, 140, 248, 0.3);
     --shadow-btn-hover: 0 8px 32px rgba(129, 140, 248, 0.4);
-
+   
     --orb-1: #4f46e5;
     --orb-2: #7c3aed;
     --orb-3: #6366f1;
@@ -115,6 +112,7 @@
     --kbd-bg: rgba(0, 0, 0, 0.06);
     --kbd-border: rgba(0, 0, 0, 0.12);
 }
+
 
 html {
     font-size: 16px;
